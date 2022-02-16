@@ -1,0 +1,51 @@
+middleware 
+khususnya di dunia web programming adalah suatu software layer yang berada di antara router dengan controller.
+Karena posisi dari middleware berada di antara router dengan controller, fungsi dari middleware rata — rata memiliki
+fungsi generik, yaitu :
+Authentication
+Authorization
+Validasi input
+Sanitasi input
+Response handler
+Data logger
+Dan lain — lain
+
+// pages/_middleware.js
+import type { NextFetchEvent, NextRequest } from 'next/server'
+
+export function middleware(req: NextRequest, ev: NextFetchEvent) {
+  return new Response('Hello, world!')
+}
+
+parameter req : request dari browser (berbentuk object)
+parameter ev  : event dari requestnya
+
+sederhana nya adalah sebuah function. dimana function itu akan dieksekusi ketika ada request yang datang ke
+aplikasi NextJs kita.
+
+contoh nya: ketika user mengakses halaman context about. pada umumnya ketika user mengakses halaman about.
+kan akan dirender halaman about misalnya about.js di NextJs nya.
+
+nah kalau ada middleware sebelum si halaman about itu dirender. dia akan mengeksekusi function middleware nya dulu.
+nah karna function middleware nya itu dieksekusi di tengah-tengah atau meng interset request yang datang ke halaman about tadi
+maka kita bisa memodifikasi respon yang akan kita berikan ke browser atau ke si request tadi
+
+ini sangat membantu ketika kita mau cek user udah login atau belum. jadi di NextJs itu kita pake ServerSideRendering dimana
+kita pake getServerSideProps ini adalah sebuah function dimana harus kita simpan atau tulis disemua halaman yang kita mau cek
+si user itu udah login atau belum. artinya ketika kita punya 20 halaman kita harus cek disetiap halaman.
+jadi kita bikin function kemudian kita panggil function nya di getServerSideProps di 20 halaman tadi. jadi nanti di 20 halaman
+itu nanti didalamnya ada getServerSideProps yang berfungsi untuk cek user tadi nah ini sangat ribet.
+dengan adanya middleware kita bisa ngecek nya di satu function saja. jadi kita bikin 1 middleware kemudian didalam function nya
+kita cek si user itu udah login atau belum
+
+kita bisa membuat lebih dari 1 middleware
+misalnya di dalam @pages/dashboard. kita buat middleware dan middlewarenya hanya akan berjalan di lingkup dashboard saja.
+
+jadi urutan nya :
+1. Request
+2. middleware (kalo ada)
+3. Response
+(Response ini kita bisa tentuin di middleware atau kalo gak ada
+dia akan pake response sewajarnya dari NextJs yaitu ngerender halaman yang direquest)
+
+middleware ini juga bisa berjalan di dalam folder API @pages/api
